@@ -4,12 +4,12 @@
  * This program can be distributed under the terms of the GNU GPL Version 2.
  * See the file LICENSE.
  */
-package ren.wxyz.iproxy.client;
+package ren.wxyz.iproxy.server;
 
 /**
- * 客户端入口类
+ * 服务端入口类
  *
- * @author wxyz
+ * @auther wxyz
  * @since 0.0.1
  */
 public class App {
@@ -17,9 +17,9 @@ public class App {
     /**
      * 入口方法
      *
-     * @param args 入口参数
+     * @param args 入口参数列表
      */
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Hello, I'm server.");
     }
 }
