@@ -3,11 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ren.wxyz</groupId>
-    <artifactId>iProxy</artifactId>
+    <artifactId>iproxy</artifactId>
     <version>0.0.1</version>
     <modules>
         <module>iproxy-server</module>
         <module>iproxy-client</module>
+        <module>iproxy-common</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -39,6 +40,7 @@
     </scm>
 
     <properties>
+        <iproxy.version>0.0.1</iproxy.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <junit.version>4.11</junit.version>
@@ -53,6 +55,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- 依赖子包 start -->
+            <dependency>
+                <groupId>ren.wxyz</groupId>
+                <artifactId>iproxy-common</artifactId>
+                <version>${iproxy.version}</version>
+            </dependency>
+            <!-- 依赖子包 end -->
+
             <!-- unit start -->
             <dependency>
                 <groupId>junit</groupId>
