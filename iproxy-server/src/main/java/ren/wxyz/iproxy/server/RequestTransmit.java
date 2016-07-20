@@ -6,6 +6,8 @@
  */
 package ren.wxyz.iproxy.server;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -15,12 +17,13 @@ import java.net.Socket;
  * @auther wxyz
  * @since 0.0.1
  */
+@Slf4j
 public class RequestTransmit implements Runnable {
 
     /**
      * 请求的编号
      */
-    private int no;
+    private long no;
 
     /**
      * HTTP端点
@@ -32,7 +35,7 @@ public class RequestTransmit implements Runnable {
      */
     private Socket socket;
 
-    public RequestTransmit(Socket socket, int no, HttpEndpoint httpEndpoint) {
+    public RequestTransmit(Socket socket, long no, HttpEndpoint httpEndpoint) {
         this.socket = socket;
         this.no = no;
         this.httpEndpoint = httpEndpoint;
@@ -49,7 +52,7 @@ public class RequestTransmit implements Runnable {
                     new InputStreamReader(socket.getInputStream(), "UTF-8"));
             while (true) {
                 String line = br.readLine();
-                httpEndpoint.send2Client(this.no, line);
+                httpEndpoint.send2Client(this.no, line + "\r\n");
             }
         }
         catch (IOException e) {
@@ -58,7 +61,6 @@ public class RequestTransmit implements Runnable {
         finally {
             close();
         }
-
     }
 
     /**
@@ -78,27 +80,18 @@ public class RequestTransmit implements Runnable {
         // 关闭socket
         if (null != socket) {
             if (!socket.isClosed()) {
-                if (!socket.isInputShutdown()) {
-                    try {
-                        socket.getInputStream().close();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    socket.close();
                 }
-                if (!socket.isOutputShutdown()) {
-                    try {
-                        socket.getOutputStream().flush();
-                        socket.getOutputStream().close();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                catch (IOException e) {
+                }
+                finally {
+                    log.debug("请求被关闭，编号：{}", this.no);
                 }
             }
         }
 
         // 发送关闭客户端
-        httpEndpoint.closeClient(this.no);
+        httpEndpoint.removeRequest(this.no);
     }
 }
